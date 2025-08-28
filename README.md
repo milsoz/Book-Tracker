@@ -1,13 +1,26 @@
-1. Open 2 terminals 1 for the backend and 1 for the frontend
+## Getting Started
 
-2. Running the backend
-   1.1. Enter the backend folder with cd backend
-   1.2. Run npm i
-   1.3. Run nodemon server.ts
+Follow these steps to run the project locally.
 
-3. Running the frontend
-   1.1. Enter the frontend folder with cd frontend
-   1.2. Run npm i
-   1.3. Run npm run dev
+### 1. Open Terminals
 
-⚠️ Note:
+Open **2 terminals**:
+
+- One for the **backend**
+- One for the **frontend**
+
+### 2. Running the Backend
+
+```bash
+cd backend        # Enter the backend folder
+npm install       # Install dependencies
+nodemon server.ts # Start the server
+```
+
+### 3. Running the Frontend
+
+```bash
+cd frontend       # Enter the frontend folder
+npm install       # Install dependencies
+npm run dev       # Start the app
+```
