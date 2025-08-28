@@ -20,7 +20,7 @@ exports.getSavedBooks = (req: Request, res: Response, next: NextFunction) => {
 
     res.status(200).json({
       status: "success",
-      data: { books: rows },
+      books: rows,
     });
   });
 };
@@ -29,12 +29,7 @@ exports.saveBook = (req: Request, res: Response, next: NextFunction) => {
   const { title, author, read } = req.body;
 
   if (!title || !author || typeof read === "undefined") {
-    return next(
-      new AppError(
-        "A book must have a title, an author and the read property.",
-        400
-      )
-    );
+    return next(new AppError("A book must have a title, and an author.", 400));
   }
 
   DB.get(
@@ -84,51 +79,42 @@ exports.updateBookStatus = (
   res: Response,
   next: NextFunction
 ) => {
-  const { title, author, read } = req.body;
+  const { id } = req.body;
 
-  if (!title || !author || typeof read === "undefined") {
-    return next(
-      new AppError("Please provide a title, author and the read property.", 400)
-    );
+  if (!id) {
+    return next(new AppError("Please provide an id.", 400));
   }
 
-  DB.get(
-    "SELECT * FROM books WHERE title = ? AND author = ?",
-    [title, author],
-    (err: Error, row: Book) => {
+  DB.get("SELECT * FROM books WHERE id = ?", [id], (err: Error, row: Book) => {
+    if (err) {
+      return next(
+        new AppError("Failed to check if book is in our database.", 500)
+      );
+    }
+
+    if (!row) {
+      return next(
+        new AppError(
+          "There is no book with this title and author in our database",
+          500
+        )
+      );
+    }
+
+    const sql = `UPDATE books SET read = ? WHERE id = ?`;
+    DB.run(sql, [1, id], (err: Error) => {
       if (err) {
         return next(
-          new AppError(
-            "Failed to check if book is already in our database.",
-            500
-          )
+          new AppError("Failed to update the book in our database.", 500)
         );
       }
 
-      if (!row) {
-        return next(
-          new AppError(
-            "There is no book with this title and author in our database",
-            500
-          )
-        );
-      }
-
-      const sql = `UPDATE books SET read = ? WHERE title = ? AND author = ?`;
-      DB.run(sql, [read, title, author], (err: Error) => {
-        if (err) {
-          return next(
-            new AppError("Failed to update the book in our database.", 500)
-          );
-        }
-
-        res.status(200).json({
-          status: "success",
-          data: {
-            book: { ...row, read },
-          },
-        });
+      res.status(200).json({
+        status: "success",
+        data: {
+          book: { ...row, read: 1 },
+        },
       });
-    }
-  );
+    });
+  });
 };
