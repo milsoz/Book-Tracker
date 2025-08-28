@@ -3,6 +3,7 @@ const DB = require("../connect");
 const AppError = require("../utils/appError");
 
 type Book = {
+  id: number;
   title: string;
   author: string;
   read: 0 | 1;
