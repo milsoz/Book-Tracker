@@ -1,11 +1,20 @@
 import type { NextFunction, Request, Response } from "express";
-const errorController = require("./controllers/errorController");
 const express = require("express");
+const cors = require("cors");
+const errorController = require("./controllers/errorController");
 const DB = require("./connect");
 const AppError = require("./utils/appError");
 const bookRouter = require("./routes/booksRoute");
 
 const app = express();
+
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+  methods: ["GET", "POST", "PATCH"],
+  allowedHeaders: ["Content-Type"],
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 

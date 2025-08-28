@@ -9,9 +9,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "sqlite3": "^5.1.7",
     "@types/express": "^5.0.3",
     "@types/node": "^24.3.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "eslint": "^9.34.0",
     "express": "^5.1.0",
@@ -19,6 +19,7 @@
     "nodemon": "^3.1.10",
     "npm": "^10.9.3",
     "prettier": "^3.6.2",
+    "sqlite3": "^5.1.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }
