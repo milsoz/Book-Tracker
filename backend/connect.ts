@@ -6,11 +6,14 @@ function connected(err: Error | null) {
   if (err) {
     return console.error(err);
   }
-
-  console.log("Created the DB");
+  console.log("Created or connected to the DB");
 }
 
-const DB = new sql3.Database(":memory:", sqlite3.OPEN_READWRITE, connected);
+const DB = new sqlite3.Database(
+  "./booksDatabase.db",
+  sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
+  connected
+);
 
 let sql = `CREATE TABLE IF NOT EXISTS books(
   id INTEGER PRIMARY KEY,
@@ -23,7 +26,6 @@ DB.run(sql, [], (err: Error | null) => {
   if (err) {
     throw new AppError(`Error creating books table`, 500);
   }
-  console.log("CREATED TABLE");
 });
 
 module.exports = DB;
