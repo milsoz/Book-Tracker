@@ -12,15 +12,15 @@ Open **2 terminals**:
 ### 2. Running the Backend
 
 ```bash
-cd backend        # Enter the backend folder
-npm install       # Install dependencies
-nodemon server.ts # Start the server
+cd backend                # Enter the backend folder
+npm install               # Install dependencies
+npx ts-node server.ts     # Start the server
 ```
 
 ### 3. Running the Frontend
 
 ```bash
-cd frontend       # Enter the frontend folder
-npm install       # Install dependencies
-npm run dev       # Start the app
+cd frontend               # Enter the frontend folder
+npm install               # Install dependencies
+npm run dev               # Start the app
 ```
