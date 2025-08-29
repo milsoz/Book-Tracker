@@ -12,13 +12,7 @@ type Book = {
 
 const dbAll = promisify(DB.all).bind(DB);
 const dbGet = promisify(DB.get).bind(DB);
-const dbRun = (...args: any[]) =>
-  new Promise<void>((resolve, reject) => {
-    DB.run(...args, function (err: Error) {
-      if (err) reject(err);
-      else resolve();
-    });
-  });
+const dbRun = promisify(DB.run).bind(DB);
 
 exports.getSavedBooks = async (
   req: Request,
