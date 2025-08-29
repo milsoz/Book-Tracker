@@ -2,6 +2,8 @@
 
 Follow these steps to run the project locally.
 
+### 0. Prerequisite: Node.js version 16 or higher installed
+
 ### 1. Open Terminals
 
 Open **2 terminals**:
