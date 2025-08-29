@@ -2,7 +2,13 @@ import type { Book } from "~/routes/home";
 import toast from "react-hot-toast";
 import changeBookStatus from "~/services/changeBookStatus";
 
-function List({ books, loadBooks }: { books: Book[]; loadBooks: any }) {
+function List({
+  books,
+  loadBooks,
+}: {
+  books: Book[];
+  loadBooks: () => Promise<void>;
+}) {
   async function handleChangeRead(id: number) {
     const response = await changeBookStatus(id);
 

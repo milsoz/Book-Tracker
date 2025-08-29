@@ -8,7 +8,7 @@ export type Book = {
   id: number;
   title: string;
   author: string;
-  read: 0 | 1;
+  read: 1 | 0; // booleans are saved as 0 and 1 in SQLite
 };
 
 export function meta({}: Route.MetaArgs) {
@@ -21,7 +21,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   const [books, setBooks] = useState<Book[] | []>([]);
 
-  async function loadBooks() {
+  async function loadBooks(): Promise<void> {
     const booksData = await getBooks();
     setBooks(booksData.books);
   }

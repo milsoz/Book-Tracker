@@ -2,10 +2,10 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import addBook from "~/services/addBook";
 
-function Form({ loadBooks }: { loadBooks: any }) {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [read, setRead] = useState(false);
+function Form({ loadBooks }: { loadBooks: () => Promise<void> }) {
+  const [title, setTitle] = useState<string>("");
+  const [author, setAuthor] = useState<string>("");
+  const [read, setRead] = useState<boolean>(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
