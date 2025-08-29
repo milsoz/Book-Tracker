@@ -9,7 +9,7 @@ function connected(err: Error | null) {
   console.log("Created or connected to the DB");
 }
 
-const DB = new sqlite3.Database(
+const DB = new sql3.Database(
   "./booksDatabase.db",
   sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
   connected

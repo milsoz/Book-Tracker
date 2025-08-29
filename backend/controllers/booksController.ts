@@ -35,7 +35,11 @@ exports.getSavedBooks = async (
 };
 
 exports.saveBook = async (req: Request, res: Response, next: NextFunction) => {
-  const { title, author, read } = req.body;
+  const {
+    title,
+    author,
+    read,
+  }: { title: string; author: string; read: boolean } = req.body;
 
   if (!title || !author || typeof read === "undefined") {
     return next(new AppError("A book must have a title, and an author.", 400));
@@ -75,7 +79,7 @@ exports.updateBookStatus = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { id } = req.body;
+  const { id }: { id: number } = req.body;
 
   if (!id) {
     return next(new AppError("Please provide an id.", 400));
@@ -93,7 +97,7 @@ exports.updateBookStatus = async (
     res.status(200).json({
       status: "success",
       data: {
-        book: { ...book, read: 1 },
+        book: { ...book, read: true },
       },
     });
   } catch (err) {

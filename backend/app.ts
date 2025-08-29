@@ -2,7 +2,6 @@ import type { NextFunction, Request, Response } from "express";
 const express = require("express");
 const cors = require("cors");
 const errorController = require("./controllers/errorController");
-const DB = require("./connect");
 const AppError = require("./utils/appError");
 const bookRouter = require("./routes/booksRoute");
 
