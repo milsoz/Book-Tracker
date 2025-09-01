@@ -55,7 +55,7 @@ exports.saveBook = async (req: Request, res: Response, next: NextFunction) => {
       return next(
         new AppError(
           "There already is a book with this title in your list.",
-          400
+          409
         )
       );
     }
@@ -91,8 +91,14 @@ exports.updateBookStatus = async (
       [id]
     );
 
+    if (!book) {
+      return next(
+        new AppError("There is no book with this id in your list.", 400)
+      );
+    }
+
     const sql = `UPDATE books SET read = ? WHERE id = ?`;
-    dbRun(sql, [true, id]);
+    await dbRun(sql, [true, id]);
 
     res.status(200).json({
       status: "success",
