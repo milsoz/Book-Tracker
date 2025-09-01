@@ -103,7 +103,7 @@ exports.updateBookStatus = async (
     res.status(200).json({
       status: "success",
       data: {
-        book: { ...book, read: true },
+        book: { ...book, read: 1 },
       },
     });
   } catch (err) {
