@@ -1,6 +1,15 @@
-const sqlite3 = require("sqlite3");
-const AppError = require("./utils/appError");
+// import { Sequelize, DataTypes } from "sequelize";
+import sqlite3 from "sqlite3";
+import AppError from "./utils/appError";
 const sql3 = sqlite3.verbose();
+
+// const sequelize = new Sequelize("./booksDatabase.db");
+// const Book = sequelize.define("Book", {
+//   id: DataTypes.INTEGER,
+//   title: DataTypes.STRING,
+//   author: DataTypes.STRING,
+//   read: DataTypes.BOOLEAN,
+// });
 
 function connected(err: Error | null) {
   if (err) {
@@ -15,7 +24,7 @@ const DB = new sql3.Database(
   connected
 );
 
-let sql = `CREATE TABLE IF NOT EXISTS books(
+const sql = `CREATE TABLE IF NOT EXISTS books(
   id INTEGER PRIMARY KEY,
   title TEXT NOT NULL,
   author TEXT NOT NULL,
@@ -28,4 +37,4 @@ DB.run(sql, [], (err: Error | null) => {
   }
 });
 
-module.exports = DB;
+export default DB;

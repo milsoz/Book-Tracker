@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
-const DB = require("../connect");
-const AppError = require("../utils/appError");
-const { promisify } = require("util");
+import DB from "../connect";
+import AppError from "../utils/appError";
+import { promisify } from "util";
 
 type Book = {
   id: number;
@@ -10,11 +10,30 @@ type Book = {
   read: 0 | 1;
 };
 
-const dbAll = promisify(DB.all).bind(DB);
-const dbGet = promisify(DB.get).bind(DB);
-const dbRun = promisify(DB.run).bind(DB);
+type dbOptionsArray = (string | boolean | number)[];
 
-exports.getSavedBooks = async (
+type HandlerFunctionType = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => Promise<void>;
+
+const dbAll = promisify(DB.all).bind(DB) as (
+  sql: string,
+  params: dbOptionsArray
+) => Promise<Book[]>;
+
+const dbGet = promisify(DB.get).bind(DB) as (
+  sql: string,
+  params: dbOptionsArray
+) => Promise<Book>;
+
+const dbRun = promisify(DB.run).bind(DB) as (
+  sql: string,
+  params: dbOptionsArray
+) => Promise<void>;
+
+const getSavedBooks: HandlerFunctionType = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -34,7 +53,11 @@ exports.getSavedBooks = async (
   }
 };
 
-exports.saveBook = async (req: Request, res: Response, next: NextFunction) => {
+const saveBook: HandlerFunctionType = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const {
     title,
     author,
@@ -74,7 +97,7 @@ exports.saveBook = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-exports.updateBookStatus = async (
+const updateBookStatus: HandlerFunctionType = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -110,3 +133,5 @@ exports.updateBookStatus = async (
     return next(new AppError("Failed to update book status.", 500));
   }
 };
+
+export { getSavedBooks, saveBook, updateBookStatus };

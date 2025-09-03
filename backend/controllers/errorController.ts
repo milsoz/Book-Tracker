@@ -5,7 +5,7 @@ interface AppError extends Error {
   status?: string;
 }
 
-module.exports = function (
+export default function (
   err: AppError,
   req: Request,
   res: Response,
@@ -20,4 +20,4 @@ module.exports = function (
     message: err.message,
     stack: err.stack,
   });
-};
+}

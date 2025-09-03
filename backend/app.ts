@@ -1,17 +1,22 @@
-import type { NextFunction, Request, Response } from "express";
-const express = require("express");
-const cors = require("cors");
-const errorController = require("./controllers/errorController");
-const AppError = require("./utils/appError");
-const bookRouter = require("./routes/booksRoute");
+import type { NextFunction, Request, Response, Express } from "express";
+import type { CorsOptions } from "cors";
 
-const app = express();
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import errorController from "./controllers/errorController";
+import AppError from "./utils/appError";
+import bookRouter from "./routes/booksRoute";
 
-const corsOptions = {
+const app: Express = express();
+
+const corsOptions: CorsOptions = {
   origin: ["http://localhost:5173"],
   methods: ["GET", "POST", "PATCH"],
   allowedHeaders: ["Content-Type"],
 };
+
+app.use(morgan("dev"));
 
 app.use(cors(corsOptions));
 
@@ -25,4 +30,4 @@ app.all("/*splat", (req: Request, res: Response, next: NextFunction) => {
 
 app.use(errorController);
 
-module.exports = app;
+export default app;
