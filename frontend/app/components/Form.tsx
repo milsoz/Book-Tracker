@@ -1,5 +1,6 @@
 import { useState } from "react"
 import toast from "react-hot-toast"
+import type { ResponseObj } from "~/routes/home"
 import addBook from "~/services/addBook"
 
 function Form({ loadBooks }: { loadBooks: () => Promise<void> }) {
@@ -9,8 +10,8 @@ function Form({ loadBooks }: { loadBooks: () => Promise<void> }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const response = await addBook({ title, author, read })
-    if (response.status !== "success") {
+    const response: ResponseObj = await addBook({ title, author, read })
+    if (response.status !== "success" && response.message) {
       return toast.error(response.message)
     }
     toast.success("Book successfully added!")

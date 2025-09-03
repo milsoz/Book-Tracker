@@ -1,9 +1,11 @@
+import type { ResponseObj } from "~/routes/home"
+
 async function fetchBooks() {
-  const data = await fetch("http://localhost:3001/api").then((res) =>
-    res.json()
+  const response: ResponseObj = await fetch("http://localhost:3001/api").then(
+    (res) => res.json()
   )
 
-  return data
+  return response
 }
 
 export default fetchBooks

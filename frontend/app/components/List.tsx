@@ -12,7 +12,7 @@ function List({
   async function handleChangeRead(id: number) {
     const response = await changeBookStatus(id)
 
-    if (response.status !== "success") {
+    if (response.status !== "success" && response.message) {
       return toast.error(response.message)
     }
     toast.success("Status successfully changed!")

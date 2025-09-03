@@ -1,5 +1,7 @@
+import type { ResponseObj } from "~/routes/home"
+
 async function addBook(book: { title: string; author: string; read: boolean }) {
-  const response = await fetch("http://localhost:3001/api", {
+  const response: ResponseObj = await fetch("http://localhost:3001/api", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(book),

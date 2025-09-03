@@ -44,7 +44,9 @@ const getSavedBooks: HandlerFunctionType = async (
     const rows: Book[] = await dbAll(sql, [])
     res.status(200).json({
       status: "success",
-      books: rows,
+      data: {
+        books: rows,
+      },
     })
   } catch (err) {
     return next(new AppError("Failed to get the books from our database.", 500))

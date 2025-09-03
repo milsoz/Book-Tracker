@@ -1,5 +1,7 @@
+import type { ResponseObj } from "~/routes/home"
+
 async function changeBookStatus(id: number) {
-  const response = await fetch("http://localhost:3001/api", {
+  const response: ResponseObj = await fetch("http://localhost:3001/api", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id }),

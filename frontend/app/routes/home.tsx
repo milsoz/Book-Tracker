@@ -11,6 +11,21 @@ export type Book = {
   read: 1 | 0 // booleans are saved as 0 and 1 in SQLite
 }
 
+type ResponseData =
+  | { book: Book; books?: never }
+  | { books: Book[]; book?: never }
+
+export type ResponseObj = {
+  status: string
+  data?: ResponseData
+  error?: {
+    status: string
+    statusCode: number
+  }
+  message?: string
+  stack?: string
+}
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Book Tracker" },
@@ -23,7 +38,8 @@ export default function Home() {
 
   async function loadBooks(): Promise<void> {
     const booksData = await getBooks()
-    setBooks(booksData.books)
+
+    if (booksData.data) setBooks(booksData.data.books ?? [])
   }
 
   useEffect(() => {
