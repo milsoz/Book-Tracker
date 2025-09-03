@@ -1,9 +1,9 @@
 async function fetchBooks() {
   const data = await fetch("http://localhost:3001/api").then((res) =>
     res.json()
-  );
+  )
 
-  return data;
+  return data
 }
 
-export default fetchBooks;
+export default fetchBooks

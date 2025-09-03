@@ -1,57 +1,55 @@
-import type { NextFunction, Request, Response } from "express";
-import DB from "../connect";
-import AppError from "../utils/appError";
-import { promisify } from "util";
+import type { NextFunction, Request, Response } from "express"
+import DB from "../connect"
+import AppError from "../utils/appError"
+import { promisify } from "util"
 
 type Book = {
-  id: number;
-  title: string;
-  author: string;
-  read: 0 | 1;
-};
+  id: number
+  title: string
+  author: string
+  read: 0 | 1
+}
 
-type dbOptionsArray = (string | boolean | number)[];
+type dbOptionsArray = (string | boolean | number)[]
 
 type HandlerFunctionType = (
   req: Request,
   res: Response,
   next: NextFunction
-) => Promise<void>;
+) => Promise<void>
 
 const dbAll = promisify(DB.all).bind(DB) as (
   sql: string,
   params: dbOptionsArray
-) => Promise<Book[]>;
+) => Promise<Book[]>
 
 const dbGet = promisify(DB.get).bind(DB) as (
   sql: string,
   params: dbOptionsArray
-) => Promise<Book>;
+) => Promise<Book>
 
 const dbRun = promisify(DB.run).bind(DB) as (
   sql: string,
   params: dbOptionsArray
-) => Promise<void>;
+) => Promise<void>
 
 const getSavedBooks: HandlerFunctionType = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const sql = `SELECT * FROM books`;
+  const sql = `SELECT * FROM books`
 
   try {
-    const rows: Book[] = await dbAll(sql, []);
+    const rows: Book[] = await dbAll(sql, [])
     res.status(200).json({
       status: "success",
       books: rows,
-    });
+    })
   } catch (err) {
-    return next(
-      new AppError("Failed to get the books from our database.", 500)
-    );
+    return next(new AppError("Failed to get the books from our database.", 500))
   }
-};
+}
 
 const saveBook: HandlerFunctionType = async (
   req: Request,
@@ -62,17 +60,17 @@ const saveBook: HandlerFunctionType = async (
     title,
     author,
     read,
-  }: { title: string; author: string; read: boolean } = req.body;
+  }: { title: string; author: string; read: boolean } = req.body
 
   if (!title || !author || typeof read === "undefined") {
-    return next(new AppError("A book must have a title, and an author.", 400));
+    return next(new AppError("A book must have a title, and an author.", 400))
   }
 
   try {
     const existingBook: Book | undefined = await dbGet(
       "SELECT * FROM books WHERE title = ? AND author = ?",
       [title, author]
-    );
+    )
 
     if (existingBook) {
       return next(
@@ -80,58 +78,58 @@ const saveBook: HandlerFunctionType = async (
           "There already is a book with this title in your list.",
           409
         )
-      );
+      )
     }
 
-    const sql = `INSERT INTO books(title,author,read) VALUES (?,?,?)`;
-    await dbRun(sql, [title, author, read]);
+    const sql = `INSERT INTO books(title,author,read) VALUES (?,?,?)`
+    await dbRun(sql, [title, author, read])
 
     res.status(201).json({
       status: "success",
       data: {
         book: { title, author, read },
       },
-    });
+    })
   } catch (err) {
-    return next(new AppError("Failed to add the book to our database.", 500));
+    return next(new AppError("Failed to add the book to our database.", 500))
   }
-};
+}
 
 const updateBookStatus: HandlerFunctionType = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { id }: { id: number } = req.body;
+  const { id }: { id: number } = req.body
 
   if (!id) {
-    return next(new AppError("Please provide an id.", 400));
+    return next(new AppError("Please provide an id.", 400))
   }
 
   try {
     const book: Book | undefined = await dbGet(
       "SELECT * FROM books WHERE id = ?",
       [id]
-    );
+    )
 
     if (!book) {
       return next(
         new AppError("There is no book with this id in your list.", 400)
-      );
+      )
     }
 
-    const sql = `UPDATE books SET read = ? WHERE id = ?`;
-    await dbRun(sql, [true, id]);
+    const sql = `UPDATE books SET read = ? WHERE id = ?`
+    await dbRun(sql, [true, id])
 
     res.status(200).json({
       status: "success",
       data: {
         book: { ...book, read: 1 },
       },
-    });
+    })
   } catch (err) {
-    return next(new AppError("Failed to update book status.", 500));
+    return next(new AppError("Failed to update book status.", 500))
   }
-};
+}
 
-export { getSavedBooks, saveBook, updateBookStatus };
+export { getSavedBooks, saveBook, updateBookStatus }

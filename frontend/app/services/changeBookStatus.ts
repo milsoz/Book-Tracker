@@ -3,9 +3,9 @@ async function changeBookStatus(id: number) {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id }),
-  }).then((res) => res.json());
+  }).then((res) => res.json())
 
-  return response;
+  return response
 }
 
-export default changeBookStatus;
+export default changeBookStatus

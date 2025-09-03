@@ -1,34 +1,34 @@
-import type { Route } from "./+types/home";
-import { useEffect, useState } from "react";
-import Form from "~/components/Form";
-import List from "~/components/List";
-import getBooks from "~/services/getBooks";
+import type { Route } from "./+types/home"
+import { useEffect, useState } from "react"
+import Form from "~/components/Form"
+import List from "~/components/List"
+import getBooks from "~/services/getBooks"
 
 export type Book = {
-  id: number;
-  title: string;
-  author: string;
-  read: 1 | 0; // booleans are saved as 0 and 1 in SQLite
-};
+  id: number
+  title: string
+  author: string
+  read: 1 | 0 // booleans are saved as 0 and 1 in SQLite
+}
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Book Tracker" },
     { name: "description", content: "Very simple book tracker" },
-  ];
+  ]
 }
 
 export default function Home() {
-  const [books, setBooks] = useState<Book[] | []>([]);
+  const [books, setBooks] = useState<Book[] | []>([])
 
   async function loadBooks(): Promise<void> {
-    const booksData = await getBooks();
-    setBooks(booksData.books);
+    const booksData = await getBooks()
+    setBooks(booksData.books)
   }
 
   useEffect(() => {
-    loadBooks();
-  }, []);
+    loadBooks()
+  }, [])
 
   return (
     <main>
@@ -37,5 +37,5 @@ export default function Home() {
       </nav>
       <List books={books} loadBooks={loadBooks} />
     </main>
-  );
+  )
 }

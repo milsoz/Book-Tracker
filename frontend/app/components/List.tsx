@@ -1,22 +1,22 @@
-import type { Book } from "~/routes/home";
-import toast from "react-hot-toast";
-import changeBookStatus from "~/services/changeBookStatus";
+import type { Book } from "~/routes/home"
+import toast from "react-hot-toast"
+import changeBookStatus from "~/services/changeBookStatus"
 
 function List({
   books,
   loadBooks,
 }: {
-  books: Book[];
-  loadBooks: () => Promise<void>;
+  books: Book[]
+  loadBooks: () => Promise<void>
 }) {
   async function handleChangeRead(id: number) {
-    const response = await changeBookStatus(id);
+    const response = await changeBookStatus(id)
 
     if (response.status !== "success") {
-      return toast.error(response.message);
+      return toast.error(response.message)
     }
-    toast.success("Status successfully changed!");
-    await loadBooks();
+    toast.success("Status successfully changed!")
+    await loadBooks()
   }
 
   return (
@@ -25,7 +25,8 @@ function List({
         books.map((book) => (
           <div
             key={book.id}
-            className="w-[250px] h-auto flex flex-col bg-zinc-800 text-zinc-50 p-4 rounded-2xl">
+            className="w-[250px] h-auto flex flex-col bg-zinc-800 text-zinc-50 p-4 rounded-2xl"
+          >
             <div className="min-w-0 flex-1">
               <h1 className="text-2xl break-word leading-snug">{book.title}</h1>
               <h2 className="text-lg break-word text-zinc-300">
@@ -46,8 +47,8 @@ function List({
                   name="markRead"
                   className="w-4 h-4 mr-4"
                   onChange={(e: React.ChangeEvent) => {
-                    e.preventDefault();
-                    handleChangeRead(book.id);
+                    e.preventDefault()
+                    handleChangeRead(book.id)
                   }}
                 />
               </div>
@@ -55,7 +56,7 @@ function List({
           </div>
         ))}
     </div>
-  );
+  )
 }
 
-export default List;
+export default List

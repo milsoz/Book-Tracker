@@ -3,9 +3,9 @@ async function addBook(book: { title: string; author: string; read: boolean }) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(book),
-  }).then((res) => res.json());
+  }).then((res) => res.json())
 
-  return response;
+  return response
 }
 
-export default addBook;
+export default addBook

@@ -1,30 +1,31 @@
-import { useState } from "react";
-import toast from "react-hot-toast";
-import addBook from "~/services/addBook";
+import { useState } from "react"
+import toast from "react-hot-toast"
+import addBook from "~/services/addBook"
 
 function Form({ loadBooks }: { loadBooks: () => Promise<void> }) {
-  const [title, setTitle] = useState<string>("");
-  const [author, setAuthor] = useState<string>("");
-  const [read, setRead] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("")
+  const [author, setAuthor] = useState<string>("")
+  const [read, setRead] = useState<boolean>(false)
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const response = await addBook({ title, author, read });
+    e.preventDefault()
+    const response = await addBook({ title, author, read })
     if (response.status !== "success") {
-      return toast.error(response.message);
+      return toast.error(response.message)
     }
-    toast.success("Book successfully added!");
+    toast.success("Book successfully added!")
 
-    setTitle("");
-    setAuthor("");
-    setRead(false);
-    await loadBooks();
+    setTitle("")
+    setAuthor("")
+    setRead(false)
+    await loadBooks()
   }
 
   return (
     <form
       className="lg:max-w-[1100px] max-w-[300px] mx-auto p-2 col-span-3 text-zinc-50 grid grid-cols-1 gap-4 lg:grid-cols-4"
-      onSubmit={handleSubmit}>
+      onSubmit={handleSubmit}
+    >
       <div className="flex gap-2 items-center justify-start">
         <label htmlFor="title" className="text-lg w-max">
           Title
@@ -67,11 +68,12 @@ function Form({ loadBooks }: { loadBooks: () => Promise<void> }) {
       </div>
       <button
         type="submit"
-        className="cursor-pointer bg-green-800 w-40 rounded-lg mx-auto">
+        className="cursor-pointer bg-green-800 w-40 rounded-lg mx-auto"
+      >
         Add book +
       </button>
     </form>
-  );
+  )
 }
 
-export default Form;
+export default Form
