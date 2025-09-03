@@ -8,7 +8,7 @@ export type Book = {
   id: number
   title: string
   author: string
-  read: 1 | 0 // booleans are saved as 0 and 1 in SQLite
+  read: boolean
 }
 
 type ResponseData =

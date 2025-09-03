@@ -18,7 +18,6 @@ function List({
     toast.success("Status successfully changed!")
     await loadBooks()
   }
-
   return (
     <div className="w-max mt-6 mx-auto grid grid-flow-row gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {books &&
@@ -34,7 +33,7 @@ function List({
               </h2>
             </div>
 
-            {book.read === 1 ? (
+            {book.read === true ? (
               <p className="text-green-400 mt-2">Read</p>
             ) : (
               <div className="flex gap-2 items-center mt-auto">

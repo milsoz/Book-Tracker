@@ -1,16 +1,6 @@
 import type { NextFunction, Request, Response } from "express"
-import DB from "../connect"
 import AppError from "../utils/appError"
-import { promisify } from "util"
-
-type Book = {
-  id: number
-  title: string
-  author: string
-  read: 0 | 1
-}
-
-type dbOptionsArray = (string | boolean | number)[]
+import Book from "../models/book"
 
 type HandlerFunctionType = (
   req: Request,
@@ -18,34 +8,13 @@ type HandlerFunctionType = (
   next: NextFunction
 ) => Promise<void>
 
-const dbAll = promisify(DB.all).bind(DB) as (
-  sql: string,
-  params: dbOptionsArray
-) => Promise<Book[]>
-
-const dbGet = promisify(DB.get).bind(DB) as (
-  sql: string,
-  params: dbOptionsArray
-) => Promise<Book>
-
-const dbRun = promisify(DB.run).bind(DB) as (
-  sql: string,
-  params: dbOptionsArray
-) => Promise<void>
-
-const getSavedBooks: HandlerFunctionType = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const sql = `SELECT * FROM books`
-
+const getSavedBooks: HandlerFunctionType = async (req, res, next) => {
   try {
-    const rows: Book[] = await dbAll(sql, [])
+    const books = await Book.findAll()
     res.status(200).json({
       status: "success",
       data: {
-        books: rows,
+        books,
       },
     })
   } catch (err) {
@@ -53,11 +22,7 @@ const getSavedBooks: HandlerFunctionType = async (
   }
 }
 
-const saveBook: HandlerFunctionType = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const saveBook: HandlerFunctionType = async (req, res, next) => {
   const {
     title,
     author,
@@ -69,10 +34,7 @@ const saveBook: HandlerFunctionType = async (
   }
 
   try {
-    const existingBook: Book | undefined = await dbGet(
-      "SELECT * FROM books WHERE title = ? AND author = ?",
-      [title, author]
-    )
+    const existingBook = await Book.findOne({ where: { title, author } })
 
     if (existingBook) {
       return next(
@@ -83,13 +45,12 @@ const saveBook: HandlerFunctionType = async (
       )
     }
 
-    const sql = `INSERT INTO books(title,author,read) VALUES (?,?,?)`
-    await dbRun(sql, [title, author, read])
+    const newBook = await Book.create({ title, author, read })
 
     res.status(201).json({
       status: "success",
       data: {
-        book: { title, author, read },
+        book: newBook,
       },
     })
   } catch (err) {
@@ -97,22 +58,15 @@ const saveBook: HandlerFunctionType = async (
   }
 }
 
-const updateBookStatus: HandlerFunctionType = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { id }: { id: number } = req.body
+const updateBookStatus: HandlerFunctionType = async (req, res, next) => {
+  const id = Number(req.body.id)
 
-  if (!id) {
-    return next(new AppError("Please provide an id.", 400))
+  if (!id || isNaN(id)) {
+    return next(new AppError("Please provide a valid numeric id.", 400))
   }
 
   try {
-    const book: Book | undefined = await dbGet(
-      "SELECT * FROM books WHERE id = ?",
-      [id]
-    )
+    const book = await Book.findByPk(id)
 
     if (!book) {
       return next(
@@ -120,13 +74,15 @@ const updateBookStatus: HandlerFunctionType = async (
       )
     }
 
-    const sql = `UPDATE books SET read = ? WHERE id = ?`
-    await dbRun(sql, [true, id])
+    book.set({
+      read: true,
+    })
+    await book.save()
 
     res.status(200).json({
       status: "success",
       data: {
-        book: { ...book, read: 1 },
+        book,
       },
     })
   } catch (err) {
